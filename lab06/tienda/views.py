@@ -1,4 +1,5 @@
 from itertools import product
+from tienda.carrito import Cart
 from django.shortcuts import get_object_or_404, render
 
 from .models import Categoria,Producto
@@ -27,3 +28,27 @@ def categoria(request, categoria_id):
         'categoria_nombre': categoria_nombre
     }
     return render(request,'categoria.html', context)
+
+def agregarCarrito(request,producto_id):
+    objProducto = Producto.objects.get(id=producto_id)
+    carritoProducto = Cart(request)
+    carritoProducto.add(objProducto,1)
+    print(request.session.get("cart"))
+    return render(request,'carrito.html')
+
+def eliminarProductoCarrito(request,producto_id):
+    objProducto = Producto.objects.get(id=producto_id)
+    carritoProducto = Cart(request)
+    carritoProducto.remove(objProducto)
+    print(request.session.get("cart"))
+    return render(request,'carrito.html')
+
+def limpiarCarrito(request):
+    CarritoProducto = Cart(request)
+    CarritoProducto.clear()
+    print(request.session.get("cart"))
+    return render(request,'carrito.html')
+
+def carrito(request):
+    print(request.session.get("cart"))
+    return render(request,'carrito.html')
